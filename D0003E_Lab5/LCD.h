@@ -6,10 +6,10 @@
  */ 
 
 
-#ifndef LCD_H_
-#define LCD_H_
+#ifndef _LCD_
+#define _LCD_
 
-
+//Imports.
 #include <avr/io.h>
 #include <stdbool.h>
 #include "TinyTimber.h"
@@ -19,13 +19,17 @@
 
 
 
-
-void northStopLight(Controller* self, int arg);
-void southStopLight(Controller* self, int arg);
-
-
+//The public functions.
+void northStopLight(Controller* self, int cars);
+void southStopLight(Controller* self, int cars);
 
 
 
+//Remove when debugging is done.
+void printAt(long num, int pos);
 
-#endif /* LCD_H_ */
+
+
+
+
+#endif /* _LCD_ */

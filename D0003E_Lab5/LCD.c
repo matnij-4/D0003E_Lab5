@@ -93,3 +93,18 @@ void printAt(long num, int pos) {
 	writeChar( num % 10 + '0', pp);
 }
 
+
+//Print the red light at North.
+void northStopLight(Controller* self, int cars){
+	printAt(cars,4);
+	
+	
+}
+
+
+
+
+//Print the red light at South.
+void southStopLight(Controller* self, int cars){
+	printAt(cars, 0);
+}

@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef CONTROLLER_H_
-#define CONTROLLER_H_
+#ifndef _CONTROLLER_
+#define _CONTROLLER_
 
 
 //Imports.
@@ -24,10 +24,11 @@ typedef struct{
 } Controller;
 
 
+//Declarations of Functions.
 void sendSignal(Controller* self, uint8_t sigdata);
 void trafficLightController(Controller* self, int arg);
 
 
 
 
-#endif /* CONTROLLER_H_ */
+#endif /* _CONTROLLER_ */

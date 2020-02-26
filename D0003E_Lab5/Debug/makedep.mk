@@ -4,6 +4,8 @@
 
 Controller.c
 
+InterruptSignalHandler.c
+
 LCD.c
 
 main.c

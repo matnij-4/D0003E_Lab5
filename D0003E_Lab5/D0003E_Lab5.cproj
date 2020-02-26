@@ -126,6 +126,12 @@
     <Compile Include="Controller.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="InterruptSignalHandler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="InterruptSignalHandler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="LCD.c">
       <SubType>compile</SubType>
     </Compile>
