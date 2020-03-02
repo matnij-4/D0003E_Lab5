@@ -13,6 +13,7 @@
 #include "TinyTimber.h"
 #include "Controller.h"
 #include "avr/io.h"
+#include <stdint.h>
 
 
 //Object
@@ -21,6 +22,9 @@ typedef struct{
 	Controller *controller;
 } InterruptSignalHandler;
 
+
+//Init
+#define initInterruptSignalHandler(controller) {initObject(), controller};
 
 
 //

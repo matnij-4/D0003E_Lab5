@@ -10,6 +10,15 @@
 #include "LCD.h"
 
 
+#define BAUD 9600
+#define FOSC 8000000UL
+
+//Formula from the documentation.
+#define MYUBRR (((FOSC / (BAUD * 16UL))) - 1)
+
+
+
+
 void lcdInit(){
 	
 	//Set Low power Waveform, no frame interrupt, no blanking. LCD Enable
@@ -28,12 +37,26 @@ void lcdInit(){
 
 void interruptsInit(){
 	
-	//Enable Interrupts
-	EIMSK |= (1 << PCIE1) | (1 << PCIE0);
+	//Interrupt request
+	EIFR = 0xC0;
+	
+	//Cause an interrupt
+	EIMSK = 0xC0;
+	
 }
 
 
-void signalInit(){
+void USARTInit(){
+		
+		//
+		UBRR0H = MYUBRR >> 8;
+		UBRR0L = MYUBRR;
+		
+		//Activate the pin but only on receive.
+		UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);
+		
+		//
+		UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
 	
 	
 }
@@ -43,10 +66,10 @@ void signalInit(){
 
 int main(void)
 {
-	//Set the init.
+	//Set the inits.
 	lcdInit();
 	interruptsInit();
-	signalInit();
+	USARTInit();
 	
 	
 	

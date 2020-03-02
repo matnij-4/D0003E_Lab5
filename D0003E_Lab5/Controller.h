@@ -13,6 +13,7 @@
 //Imports.
 #include "avr/io.h"
 #include "TinyTimber.h"
+#include <stdint.h>
 
 
 
@@ -27,6 +28,7 @@ typedef struct{
 //Declarations of Functions.
 void sendSignal(Controller* self, uint8_t sigdata);
 void trafficLightController(Controller* self, int arg);
+void bitParser(Controller* self, uint8_t bits);
 
 
 
