@@ -7,6 +7,7 @@
 
 //Includes.
 #include "LCD.h"
+#include "Controller.h"
 
 
 
@@ -95,7 +96,7 @@ void printAt(long num, int pos) {
 
 
 //Print the red light at North.
-void northStopLight(Controller* self, int cars){
+void northStopLight(LCD* self, int cars){
 	printAt(cars,4);
 	
 	
@@ -103,6 +104,10 @@ void northStopLight(Controller* self, int cars){
 
 
 //Print the red light at South.
-void southStopLight(Controller* self, int cars){
+void southStopLight(LCD* self, int cars){
 	printAt(cars, 0);
+}
+
+void carsOnBridge(LCD* self, int cars){
+	printAt(cars, 2);
 }

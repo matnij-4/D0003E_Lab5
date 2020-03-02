@@ -8,6 +8,8 @@
 #include <avr/io.h>
 #include "TinyTimber.h"
 #include "LCD.h"
+#include "Controller.h"
+#include "InterruptSignalHandler.h"
 
 
 #define BAUD 9600
@@ -61,6 +63,14 @@ void USARTInit(){
 	
 }
 
+//Interface Object.
+LCD interface = initLCD();
+
+
+Controller conto = initController(&interface);
+
+
+InterruptSignalHandler inter = initInterruptSignalHandler(&conto);
 
 
 
@@ -70,6 +80,10 @@ int main(void)
 	lcdInit();
 	interruptsInit();
 	USARTInit();
+	
+	INSTALL(&inter, receivedUSART, IRQ_USART0_RX);
+	
+	return TINYTIMBER(&interface, carsOnBridge, 0);
 	
 	
 	

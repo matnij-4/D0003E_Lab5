@@ -19,7 +19,7 @@
 //Object
 typedef struct{
 	Object super;
-	Controller *controller;
+	Controller* controller;
 } InterruptSignalHandler;
 
 
@@ -28,7 +28,7 @@ typedef struct{
 
 
 //
-void receiver(InterruptSignalHandler* self);
+void receivedUSART(InterruptSignalHandler* self);
 
 
 

@@ -13,15 +13,24 @@
 #include <avr/io.h>
 #include <stdbool.h>
 #include "TinyTimber.h"
-#include "Controller.h"
 #include <stdint.h>
 
 
+//Object.
+typedef struct{
+	Object super;
+} LCD;
+
+
+
+//Constructor
+#define initLCD() {initObject()}
 
 
 //The public functions.
-void northStopLight(Controller* self, int cars);
-void southStopLight(Controller* self, int cars);
+void northStopLight(LCD* self, int cars);
+void southStopLight(LCD* self, int cars);
+void carsOnBridge(LCD* self, int cars);
 
 
 

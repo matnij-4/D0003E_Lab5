@@ -14,16 +14,25 @@
 #include "avr/io.h"
 #include "TinyTimber.h"
 #include <stdint.h>
+#include "LCD.h"
+#include <stdbool.h>
 
 
 
 //Object
 typedef struct{
 	Object super;
+	LCD* lcd;
 	int queueSouth;
 	int queueNorth;
+	int carsOn;
+	int carsPassed;
+	bool northWasOn;
 } Controller;
 
+
+
+#define initController(lcd) {initObject(), lcd, 0, 0, 0, 0, false}
 
 //Declarations of Functions.
 void sendSignal(Controller* self, uint8_t sigdata);
