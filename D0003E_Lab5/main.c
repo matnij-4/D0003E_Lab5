@@ -35,6 +35,11 @@ void lcdInit(){
 	//prescaler setting N=16, clock divider setting D=8
 	LCDFRR = (1 << LCDCD0) | (1 << LCDCD1) | (1 << LCDCD2);
 	
+	
+	//Just set the display.
+	printAt(00, 0);
+	printAt(00, 2);
+	printAt(00, 4);
 }
 
 void interruptsInit(){
@@ -80,6 +85,7 @@ int main(void)
 	lcdInit();
 	interruptsInit();
 	USARTInit();
+	
 	
 	INSTALL(&inter, receivedUSART, IRQ_USART0_RX);
 	

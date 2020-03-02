@@ -56,7 +56,7 @@ void trafficLightController(Controller* self, int arg){
 void sendSignal(Controller* self, uint8_t sigdata){
 	
 	//Update Stoplight.
-	ASYNC(self->lcd, northStopLight, sigdata);
+	ASYNC(self->lcd, northStopLight, self->queueNorth);
 	
 	//Send to Sym.
 	UDR0 = sigdata;

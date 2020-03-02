@@ -10,5 +10,6 @@
 
 void receivedUSART(InterruptSignalHandler* self){
 	uint8_t bits = UDR0;
+	
 	ASYNC(self->controller, bitParser, bits);
 }
