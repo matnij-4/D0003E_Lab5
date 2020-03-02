@@ -37,14 +37,14 @@ Discarded input sections
  .text.sendSignal
                 0x00000000        0x2 Controller.o
  .text.bitParser
-                0x00000000       0x54 Controller.o
- .debug_info    0x00000000      0x22e Controller.o
- .debug_abbrev  0x00000000      0x103 Controller.o
- .debug_loc     0x00000000       0xd4 Controller.o
+                0x00000000       0xf8 Controller.o
+ .debug_info    0x00000000      0x31b Controller.o
+ .debug_abbrev  0x00000000      0x110 Controller.o
+ .debug_loc     0x00000000      0x17f Controller.o
  .debug_aranges
                 0x00000000       0x30 Controller.o
  .debug_ranges  0x00000000       0x20 Controller.o
- .debug_line    0x00000000       0xff Controller.o
+ .debug_line    0x00000000      0x141 Controller.o
  .debug_str     0x00000000      0x212 Controller.o
  .comment       0x00000000       0x31 Controller.o
  .debug_frame   0x00000000       0x6c Controller.o

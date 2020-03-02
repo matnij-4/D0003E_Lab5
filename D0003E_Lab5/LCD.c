@@ -102,8 +102,6 @@ void northStopLight(Controller* self, int cars){
 }
 
 
-
-
 //Print the red light at South.
 void southStopLight(Controller* self, int cars){
 	printAt(cars, 0);

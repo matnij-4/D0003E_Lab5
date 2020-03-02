@@ -14,7 +14,7 @@
 #define FOSC 8000000UL
 
 //Formula from the documentation.
-#define MYUBRR (((FOSC / (BAUD * 16UL))) - 1)
+#define THEUBRR (((FOSC / (BAUD * 16UL))) - 1)
 
 
 
@@ -48,9 +48,9 @@ void interruptsInit(){
 
 void USARTInit(){
 		
-		//
-		UBRR0H = MYUBRR >> 8;
-		UBRR0L = MYUBRR;
+		//The UBRR
+		UBRR0H = THEUBRR >> 8;
+		UBRR0L = THEUBRR;
 		
 		//Activate the pin but only on receive.
 		UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);

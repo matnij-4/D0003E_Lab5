@@ -139,26 +139,25 @@ void interruptsInit(){
       ba:	08 95       	ret
 
 000000bc <USARTInit>:
-}
 
 
 void USARTInit(){
-	
-		UBRR0H = MYUBRR >> 8;
+		
+		//The UBRR
+		UBRR0H = THEUBRR >> 8;
       bc:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__DATA_REGION_ORIGIN__+0x65>
-		UBRR0L = MYUBRR;
+		UBRR0L = THEUBRR;
       c0:	83 e3       	ldi	r24, 0x33	; 51
       c2:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__DATA_REGION_ORIGIN__+0x64>
-		
 		
 		//Activate the pin but only on receive.
 		UCSR0B = (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);
       c6:	88 e9       	ldi	r24, 0x98	; 152
       c8:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__DATA_REGION_ORIGIN__+0x61>
 		
-		
-		UCSR0C = (1<<USBS0)|(1<<UCSZ01)|(1<<UCSZ00);
-      cc:	8e e0       	ldi	r24, 0x0E	; 14
+		//
+		UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
+      cc:	86 e0       	ldi	r24, 0x06	; 6
       ce:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__DATA_REGION_ORIGIN__+0x62>
       d2:	08 95       	ret
 
@@ -167,7 +166,7 @@ void USARTInit(){
 
 int main(void)
 {
-	//Set the init.
+	//Set the inits.
 	lcdInit();
       d4:	0e 94 4d 00 	call	0x9a	; 0x9a <lcdInit>
 	interruptsInit();
