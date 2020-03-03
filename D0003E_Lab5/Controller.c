@@ -20,17 +20,36 @@ void trafficLightController(Controller* self, int arg){
 	//No Cars.
 	if((self->queueNorth == 0) && (self->queueSouth == 0)){
 		ASYNC(self, sendSignal, REDRED);
+		ASYNC(self, printStopLight, REDRED);
 		self->carsPassed = 0;
 	}
 	
 	//Cars only North
 	else if((self->queueNorth > 0) && (self->queueSouth == 0)){
-		ASYNC(self, sendSignal, GREENRED);
+		if(self->carsOn == 0){
+			ASYNC(self, sendSignal, GREENRED);
+			ASYNC(self, printStopLight, GREENRED);
+			self->northWasOn = true;
+		}
+		else{
+			AFTER(SEC(6), self, printStopLight, GREENRED);
+			AFTER(SEC(6), self, sendSignal, GREENRED);
+		}
+		
 	}
 	
 	//Cars only South.
 	else if((self->queueNorth == 0) && (self->queueSouth > 0)){
-		ASYNC(self, sendSignal, REDGREEN);
+		if(self->carsOn == 0){
+			ASYNC(self, sendSignal, REDGREEN);
+			ASYNC(self, printStopLight, REDGREEN);
+			self->northWasOn = false;
+		}
+		else{
+			AFTER(SEC(5), self, printStopLight, REDGREEN);
+			AFTER(SEC(5), self, sendSignal, REDGREEN);
+		}
+		
 	}
 	
 	
@@ -39,7 +58,9 @@ void trafficLightController(Controller* self, int arg){
 		self->northWasOn = false;
 		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
+		ASYNC(self, printStopLight, REDRED);
 		AFTER(SEC(5), self, sendSignal, REDGREEN);
+		AFTER(SEC(5), self, printStopLight, REDGREEN);
 	}
 	
 	//Do not starve North.
@@ -47,7 +68,9 @@ void trafficLightController(Controller* self, int arg){
 		self->northWasOn = true;
 		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
+		ASYNC(self, printStopLight, REDRED);
 		AFTER(SEC(5), self, sendSignal, GREENRED);
+		AFTER(SEC(5), self, printStopLight, GREENRED);
 	}
 }
 
@@ -55,29 +78,29 @@ void trafficLightController(Controller* self, int arg){
 //Send signals to SYM.
 void sendSignal(Controller* self, uint8_t sigdata){
 	
-	//Update Stoplight.
-	ASYNC(self->lcd, northStopLight, self->queueNorth);
-	
 	//Send to Sym.
 	UDR0 = sigdata;
 }
 
 void addToBridge(Controller* self, int add){
 	
-	
 	//Add Car to the bridge.
 	if(add == 1){
 		self->carsOn++;
+		ASYNC(self->lcd, carsOnBridge, self->carsOn);
 		AFTER(SEC(5), self, addToBridge, 0);
 	}
 	
 	//Remove the Cars from bridge.
 	else if(add == 0){
 		self->carsOn--;
+		ASYNC(self->lcd, carsOnBridge, self->carsOn);
 	}
 	
 	
 }
+
+
 
 //Pars the bits and reads them.
 void bitParser(Controller* self, uint8_t bits){
@@ -86,6 +109,9 @@ void bitParser(Controller* self, uint8_t bits){
 	if((bits & 1 ) == 1){
 		ASYNC(self, trafficLightController, 0);
 		self->queueNorth++;
+		
+		//Update Stoplight.
+		ASYNC(self->lcd, northStopLight, self->queueNorth);
 	}
 	
 	//North car enters the bridge.
@@ -94,6 +120,7 @@ void bitParser(Controller* self, uint8_t bits){
 			self->queueNorth--;
 			ASYNC(self, trafficLightController, 0);
 			ASYNC(self, addToBridge, 1);
+			ASYNC(self->lcd, northStopLight, self->queueNorth);
 			
 			//Adds car to passed.
 			self->carsPassed++;
@@ -105,6 +132,9 @@ void bitParser(Controller* self, uint8_t bits){
 	else if(((bits >> 2) & 1) == 1){
 		ASYNC(self, trafficLightController, 0);
 		self->queueSouth++;
+		
+		//Update Stoplight.
+		ASYNC(self->lcd, southStopLight, self->queueSouth);
 	}
 	
 	//South car enters the bridge.
@@ -113,6 +143,7 @@ void bitParser(Controller* self, uint8_t bits){
 			self->queueSouth--;
 			ASYNC(self, trafficLightController, 0);
 			ASYNC(self, addToBridge, 1);
+			ASYNC(self->lcd, southStopLight, self->queueSouth);
 			
 			//Adds car to passed.
 			self->carsPassed++;

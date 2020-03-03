@@ -111,3 +111,18 @@ void southStopLight(LCD* self, int cars){
 void carsOnBridge(LCD* self, int cars){
 	printAt(cars, 2);
 }
+
+void printStopLight(LCD* self, int light){
+	if(light == 0xa){
+		LCDDR3 = 0x1;
+		LCDDR18 = 0x1;
+	}
+	else if (light == 0x9){
+		LCDDR3 = 0x0;
+		LCDDR18 = 0x1;
+	}
+	else if(light == 0x6){
+		LCDDR3 = 0x1;
+		LCDDR18 = 0x0;
+	}
+}

@@ -38,6 +38,7 @@ typedef struct{
 void sendSignal(Controller* self, uint8_t sigdata);
 void trafficLightController(Controller* self, int arg);
 void bitParser(Controller* self, uint8_t bits);
+void addToBridge(Controller* self, int add);
 
 
 

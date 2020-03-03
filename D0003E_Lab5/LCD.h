@@ -31,6 +31,7 @@ typedef struct{
 void northStopLight(LCD* self, int cars);
 void southStopLight(LCD* self, int cars);
 void carsOnBridge(LCD* self, int cars);
+void printStopLight(LCD* self, int cars);
 
 
 
