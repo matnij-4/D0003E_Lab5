@@ -12,7 +12,7 @@
 #define GREENRED 0x9
 #define REDGREEN 0x6
 
-
+int counter = 0;
 
 //Logic for the Lights.
 void trafficLightController(Controller* self, int arg){
@@ -31,7 +31,7 @@ void trafficLightController(Controller* self, int arg){
 			ASYNC(self, printStopLight, GREENRED);
 			self->northWasOn = true;
 		}
-		else{
+		else if (self->queueSouth > 0){
 			AFTER(SEC(5), self, printStopLight, GREENRED);
 			AFTER(SEC(5), self, sendSignal, GREENRED);
 		}
@@ -45,7 +45,7 @@ void trafficLightController(Controller* self, int arg){
 			ASYNC(self, printStopLight, REDGREEN);
 			self->northWasOn = false;
 		}
-		else{
+		else if (self->queueNorth > 0){
 			AFTER(SEC(5), self, printStopLight, REDGREEN);
 			AFTER(SEC(5), self, sendSignal, REDGREEN);
 		}
@@ -54,23 +54,31 @@ void trafficLightController(Controller* self, int arg){
 	
 	
 	//Do not starve South.
-	else if(self->carsPassed > 4 &&  self->northWasOn && (self->queueNorth > 0)){
+	else if(self->carsPassed > 4 &&  self->northWasOn){
 		self->northWasOn = false;
-		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
+		ASYNC(self, sendSignal, REDRED);
 		ASYNC(self, printStopLight, REDRED);
-		AFTER(SEC(5), self, sendSignal, REDGREEN);
-		AFTER(SEC(5), self, printStopLight, REDGREEN);
+		
+		if(self->queueSouth > 0){
+			AFTER(SEC(5), self, sendSignal, REDGREEN);
+			AFTER(SEC(5), self, printStopLight, REDGREEN);
+		}
+		
 	}
 	
 	//Do not starve North.
-	else if(self->carsPassed > 4 && !(self->northWasOn) && (self->queueSouth > 0)){
+	else if(self->carsPassed > 4 && !(self->northWasOn)){
 		self->northWasOn = true;
-		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
+		ASYNC(self, sendSignal, REDRED);
 		ASYNC(self, printStopLight, REDRED);
-		AFTER(SEC(5), self, sendSignal, GREENRED);
-		AFTER(SEC(5), self, printStopLight, GREENRED);
+		
+		
+		if(self->queueNorth > 0){
+			AFTER(SEC(5), self, sendSignal, GREENRED);
+			AFTER(SEC(5), self, printStopLight, GREENRED);
+		}
 	}
 }
 
