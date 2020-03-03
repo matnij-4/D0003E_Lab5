@@ -32,8 +32,8 @@ void trafficLightController(Controller* self, int arg){
 			self->northWasOn = true;
 		}
 		else{
-			AFTER(SEC(6), self, printStopLight, GREENRED);
-			AFTER(SEC(6), self, sendSignal, GREENRED);
+			AFTER(SEC(5), self, printStopLight, GREENRED);
+			AFTER(SEC(5), self, sendSignal, GREENRED);
 		}
 		
 	}
@@ -54,7 +54,7 @@ void trafficLightController(Controller* self, int arg){
 	
 	
 	//Do not starve South.
-	else if(self->carsPassed > 4 &&  self->northWasOn){
+	else if(self->carsPassed > 4 &&  self->northWasOn && (self->queueNorth > 0)){
 		self->northWasOn = false;
 		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
@@ -64,7 +64,7 @@ void trafficLightController(Controller* self, int arg){
 	}
 	
 	//Do not starve North.
-	else if(self->carsPassed > 4 && !(self->northWasOn)){
+	else if(self->carsPassed > 4 && !(self->northWasOn) && (self->queueSouth > 0)){
 		self->northWasOn = true;
 		ASYNC(self, sendSignal, REDRED);
 		self->carsPassed = 0;
@@ -82,19 +82,20 @@ void sendSignal(Controller* self, uint8_t sigdata){
 	UDR0 = sigdata;
 }
 
+
+
 void addToBridge(Controller* self, int add){
 	
 	//Add Car to the bridge.
 	if(add == 1){
-		self->carsOn++;
-		ASYNC(self->lcd, carsOnBridge, self->carsOn);
+		SYNC(self->lcd, carsOnBridge, self->carsOn);
 		AFTER(SEC(5), self, addToBridge, 0);
 	}
 	
 	//Remove the Cars from bridge.
 	else if(add == 0){
 		self->carsOn--;
-		ASYNC(self->lcd, carsOnBridge, self->carsOn);
+		SYNC(self->lcd, carsOnBridge, self->carsOn);
 	}
 	
 	
@@ -118,6 +119,7 @@ void bitParser(Controller* self, uint8_t bits){
 	else if(((bits >> 1) & 1) == 1){
 		if(self->queueNorth > 0){
 			self->queueNorth--;
+			self->carsOn++;
 			ASYNC(self, trafficLightController, 0);
 			ASYNC(self, addToBridge, 1);
 			ASYNC(self->lcd, northStopLight, self->queueNorth);
@@ -141,6 +143,7 @@ void bitParser(Controller* self, uint8_t bits){
 	else if(((bits >> 3) & 1) == 1){
 		if(self->queueSouth > 0){
 			self->queueSouth--;
+			self->carsOn++;
 			ASYNC(self, trafficLightController, 0);
 			ASYNC(self, addToBridge, 1);
 			ASYNC(self->lcd, southStopLight, self->queueSouth);
