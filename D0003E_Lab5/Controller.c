@@ -20,7 +20,6 @@ void trafficLightController(Controller* self, int arg){
 	//No Cars.
 	if((self->queueNorth == 0) && (self->queueSouth == 0)){
 		ASYNC(self, sendSignal, REDRED);
-		ASYNC(self, printStopLight, REDRED);
 		self->carsPassed = 0;
 	}
 	
@@ -28,12 +27,10 @@ void trafficLightController(Controller* self, int arg){
 	else if((self->queueNorth > 0) && (self->queueSouth == 0)){
 		if(self->carsOn == 0){
 			ASYNC(self, sendSignal, GREENRED);
-			ASYNC(self, printStopLight, GREENRED);
 			self->northWasOn = true;
 		}
 		else{
 			//Mattias Fixa async calls.
-			AFTER(SEC(5), self, printStopLight, GREENRED);
 			AFTER(SEC(5), self, sendSignal, GREENRED);
 		}
 		
@@ -43,12 +40,10 @@ void trafficLightController(Controller* self, int arg){
 	else if((self->queueNorth == 0) && (self->queueSouth > 0)){
 		if(self->carsOn == 0){
 			ASYNC(self, sendSignal, REDGREEN);
-			ASYNC(self, printStopLight, REDGREEN);
 			self->northWasOn = false;
 		}
 		else{
 			//Mattias Fixa async calls.
-			AFTER(SEC(5), self, printStopLight, REDGREEN);
 			AFTER(SEC(5), self, sendSignal, REDGREEN);
 		}
 		
@@ -60,11 +55,9 @@ void trafficLightController(Controller* self, int arg){
 		self->northWasOn = false;
 		self->carsPassed = 0;
 		ASYNC(self, sendSignal, REDRED);
-		ASYNC(self, printStopLight, REDRED);
 		
 
 		AFTER(SEC(5), self, sendSignal, REDGREEN);
-		AFTER(SEC(5), self, printStopLight, REDGREEN);
 
 		
 	}
@@ -74,17 +67,18 @@ void trafficLightController(Controller* self, int arg){
 		self->northWasOn = true;
 		self->carsPassed = 0;
 		ASYNC(self, sendSignal, REDRED);
-		ASYNC(self, printStopLight, REDRED);
 		
 		
 		AFTER(SEC(5), self, sendSignal, GREENRED);
-		AFTER(SEC(5), self, printStopLight, GREENRED);
 	}
 }
 
 
 //Send signals to SYM.
 void sendSignal(Controller* self, uint8_t sigdata){
+	
+	//Send to LCD.
+	ASYNC(self, printStopLight, sigdata);
 	
 	//Send to Sym.
 	UDR0 = sigdata;
