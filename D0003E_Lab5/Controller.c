@@ -31,7 +31,8 @@ void trafficLightController(Controller* self, int arg){
 			ASYNC(self, printStopLight, GREENRED);
 			self->northWasOn = true;
 		}
-		else if (self->queueSouth > 0){
+		else{
+			//Mattias Fixa async calls.
 			AFTER(SEC(5), self, printStopLight, GREENRED);
 			AFTER(SEC(5), self, sendSignal, GREENRED);
 		}
@@ -45,7 +46,8 @@ void trafficLightController(Controller* self, int arg){
 			ASYNC(self, printStopLight, REDGREEN);
 			self->northWasOn = false;
 		}
-		else if (self->queueNorth > 0){
+		else{
+			//Mattias Fixa async calls.
 			AFTER(SEC(5), self, printStopLight, REDGREEN);
 			AFTER(SEC(5), self, sendSignal, REDGREEN);
 		}
@@ -60,10 +62,10 @@ void trafficLightController(Controller* self, int arg){
 		ASYNC(self, sendSignal, REDRED);
 		ASYNC(self, printStopLight, REDRED);
 		
-		if(self->queueSouth > 0){
-			AFTER(SEC(5), self, sendSignal, REDGREEN);
-			AFTER(SEC(5), self, printStopLight, REDGREEN);
-		}
+
+		AFTER(SEC(5), self, sendSignal, REDGREEN);
+		AFTER(SEC(5), self, printStopLight, REDGREEN);
+
 		
 	}
 	
@@ -75,10 +77,8 @@ void trafficLightController(Controller* self, int arg){
 		ASYNC(self, printStopLight, REDRED);
 		
 		
-		if(self->queueNorth > 0){
-			AFTER(SEC(5), self, sendSignal, GREENRED);
-			AFTER(SEC(5), self, printStopLight, GREENRED);
-		}
+		AFTER(SEC(5), self, sendSignal, GREENRED);
+		AFTER(SEC(5), self, printStopLight, GREENRED);
 	}
 }
 
